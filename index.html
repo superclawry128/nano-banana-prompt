@@ -390,7 +390,8 @@
         };
 
         options.forEach(option => {
-            option.addEventListener('click', () => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
                 const value = option.dataset.value;
                 const key = option.dataset.key;
                 const checkbox = option.querySelector('input');
