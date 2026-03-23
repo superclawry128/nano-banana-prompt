@@ -77,6 +77,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
         .option.selected .option-checkbox {
             background: #ffd700;
@@ -95,6 +96,95 @@
             font-size: 0.8rem;
             margin-left: 5px;
         }
+        .section-hint {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        /* Output mode toggle */
+        .mode-toggle {
+            display: flex;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            color: #888;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background: #ffd700;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        /* Reference fusion */
+        .fusion-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .fusion-input {
+            flex: 1;
+            padding: 8px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+        .fusion-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .fusion-input::placeholder {
+            color: #666;
+        }
+        .fusion-percent {
+            width: 60px;
+            text-align: center;
+        }
+        .fusion-plus {
+            display: flex;
+            align-items: center;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .fusion-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        /* Invisible verbs input */
+        .verbs-input {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .verbs-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .verbs-input::placeholder {
+            color: #666;
+        }
+
         .prompt-section {
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
@@ -114,9 +204,16 @@
             padding: 12px;
             min-height: 80px;
             font-size: 0.9rem;
-            line-height: 1.5;
+            line-height: 1.6;
             white-space: pre-wrap;
             color: #e0e0e0;
+        }
+        .prompt-output.layered .prompt-line {
+            display: block;
+        }
+        .prompt-output.layered .prompt-line-label {
+            color: #ffd700;
+            font-weight: bold;
         }
         .copy-btn {
             width: 100%;
@@ -181,10 +278,64 @@
         <h1>🍌 Nano Banana Prompt Builder</h1>
         <p class="subtitle">Cinematic photography prompt generator</p>
 
+        <!-- Output Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="flat">📄 Flat</button>
+            <button class="mode-btn" data-mode="layered">🧱 Layered</button>
+        </div>
+
         <!-- Custom Subject -->
         <div class="section">
             <div class="section-title">📝 Subject / Scene</div>
             <input type="text" id="subject" class="custom-input" placeholder="e.g., A vintage car, Portrait of a woman, A cyberpunk city">
+        </div>
+
+        <!-- Invisible Verbs -->
+        <div class="section">
+            <div class="section-title">🖼️ Invisible Verbs</div>
+            <p class="section-hint">Guide the model without cluttering the prompt</p>
+            <input type="text" id="invisible-verb" class="verbs-input" placeholder="e.g., Emphasize neon edge light around character">
+        </div>
+
+        <!-- Reference Fusion -->
+        <div class="section">
+            <div class="section-title">🔗 Reference Fusion</div>
+            <p class="section-hint">Mix two styles with custom ratio</p>
+            <div class="fusion-label">Style 1</div>
+            <input type="text" id="fusion-style1" class="fusion-input" placeholder="e.g., Studio Ghibli">
+            <div class="fusion-row">
+                <input type="text" id="fusion-pct1" class="fusion-input fusion-percent" placeholder="70" value="70">
+                <div class="fusion-plus">%</div>
+                <input type="text" id="fusion-pct2" class="fusion-input fusion-percent" placeholder="30" value="30">
+            </div>
+            <div class="fusion-label">Style 2</div>
+            <input type="text" id="fusion-style2" class="fusion-input" placeholder="e.g., Cyberpunk noir">
+        </div>
+
+        <!-- Precision Modifiers -->
+        <div class="section">
+            <div class="section-title">🔢 Precision Modifiers</div>
+            <p class="section-hint">Control how strictly nano-banana follows your instructions</p>
+            <label class="option" data-value="exactly as described" data-key="precision">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Exactly as described <span class="option-chinese">(完全如描述)</span></span>
+            </label>
+            <label class="option" data-value="faithful to the prompt" data-key="precision">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Faithful to the prompt <span class="option-chinese">(忠实于提示)</span></span>
+            </label>
+            <label class="option" data-value="strict composition" data-key="precision">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Strict composition <span class="option-chinese">(严格构图)</span></span>
+            </label>
+            <label class="option" data-value="highly consistent" data-key="precision">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Highly consistent <span class="option-chinese">(高度一致)</span></span>
+            </label>
         </div>
 
         <!-- Camera Type -->
@@ -322,9 +473,272 @@
             </label>
         </div>
 
+        <!-- Physical Laws -->
+        <div class="section">
+            <div class="section-title">🌍 Physical Laws</div>
+            <p class="section-hint">Models love physics — instantly unlock realism</p>
+            <label class="option" data-value="rain hitting metal" data-key="physics">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Rain hitting metal <span class="option-chinese">(雨打金属)</span></span>
+            </label>
+            <label class="option" data-value="wind blowing fabric" data-key="physics">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Wind blowing fabric <span class="option-chinese">(风吹面料)</span></span>
+            </label>
+            <label class="option" data-value="soft shadows on concrete" data-key="physics">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Soft shadows on concrete <span class="option-chinese">(柔和阴影映在混凝土上)</span></span>
+            </label>
+            <label class="option" data-value="distorted reflection in water" data-key="physics">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Distorted reflection in water <span class="option-chinese">(水中扭曲的反射)</span></span>
+            </label>
+        </div>
+
+        <!-- Micro Details -->
+        <div class="section">
+            <div class="section-title">🔬 Micro Details</div>
+            <p class="section-hint">1-3 word descriptions that push the model into ultra-precise mode</p>
+            <label class="option" data-value="dust particles" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Dust particles <span class="option-chinese">(尘埃颗粒)</span></span>
+            </label>
+            <label class="option" data-value="tiny scratches" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Tiny scratches <span class="option-chinese">(微小划痕)</span></span>
+            </label>
+            <label class="option" data-value="film grain" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Film grain <span class="option-chinese">(胶片颗粒)</span></span>
+            </label>
+            <label class="option" data-value="soft halo" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Soft halo <span class="option-chinese">(柔和光晕)</span></span>
+            </label>
+            <label class="option" data-value="subtle highlights" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Subtle highlights <span class="option-chinese">(细微高光)</span></span>
+            </label>
+            <label class="option" data-value="ambient fog" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Ambient fog <span class="option-chinese">(环境雾气)</span></span>
+            </label>
+            <label class="option" data-value="cold reflections" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Cold reflections <span class="option-chinese">(冰冷反射)</span></span>
+            </label>
+            <label class="option" data-value="fingerprint traces" data-key="micro">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Fingerprint traces <span class="option-chinese">(指纹痕迹)</span></span>
+            </label>
+        </div>
+
+        <!-- Style Anchors -->
+        <div class="section">
+            <div class="section-title">🎯 Style Anchors</div>
+            <p class="section-hint">Choose 1-2, do not exceed 10 — keep them short and powerful</p>
+            <label class="option" data-value="Studio Ghibli" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Studio Ghibli <span class="option-chinese">(吉卜力工作室)</span></span>
+            </label>
+            <label class="option" data-value="realistic anime" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Realistic anime <span class="option-chinese">(写实动漫)</span></span>
+            </label>
+            <label class="option" data-value="Wes Anderson symmetry" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Wes Anderson symmetry <span class="option-chinese">(韦斯·安德森对称)</span></span>
+            </label>
+            <label class="option" data-value="Pixar coloring" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Pixar coloring <span class="option-chinese">(皮克斯着色)</span></span>
+            </label>
+            <label class="option" data-value="Renaissance oil painting" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Renaissance oil painting <span class="option-chinese">(文艺复兴油画)</span></span>
+            </label>
+            <label class="option" data-value="hyperrealistic photography" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Hyperrealistic photography <span class="option-chinese">(超写实摄影)</span></span>
+            </label>
+            <label class="option" data-value="Cyberpunk noir" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Cyberpunk noir <span class="option-chinese">(赛博朋克黑色)</span></span>
+            </label>
+            <label class="option" data-value="film noir" data-key="anchor">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Film noir <span class="option-chinese">(黑色电影)</span></span>
+            </label>
+        </div>
+
+        <!-- Texture Dictionary -->
+        <div class="section">
+            <div class="section-title">🪵 Texture Dictionary</div>
+            <p class="section-hint">Texture = instant style</p>
+            <label class="option" data-value="brushed steel" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Brushed steel <span class="option-chinese">(拉丝钢)</span></span>
+            </label>
+            <label class="option" data-value="velvet fabric" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Velvet fabric <span class="option-chinese">(天鹅绒面料)</span></span>
+            </label>
+            <label class="option" data-value="frosted glass" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Frosted glass <span class="option-chinese">(磨砂玻璃)</span></span>
+            </label>
+            <label class="option" data-value="cracked dust" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Cracked dust <span class="option-chinese">(破裂灰尘)</span></span>
+            </label>
+            <label class="option" data-value="smooth marble" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Smooth marble <span class="option-chinese">(光滑大理石)</span></span>
+            </label>
+            <label class="option" data-value="matte black carbon" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Matte black carbon <span class="option-chinese">(哑光黑碳)</span></span>
+            </label>
+            <label class="option" data-value="weathered wood" data-key="texture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Weathered wood <span class="option-chinese">(风化木材)</span></span>
+            </label>
+        </div>
+
+        <!-- Color Psychology -->
+        <div class="section">
+            <div class="section-title">🎨 Color Psychology</div>
+            <p class="section-hint">Tell it the emotional reason behind the colors</p>
+            <label class="option" data-value="use cold blue to express loneliness" data-key="color">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Cold blue → loneliness <span class="option-chinese">(冷蓝表达孤独)</span></span>
+            </label>
+            <label class="option" data-value="warm orange brings comfort" data-key="color">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Warm orange → comfort <span class="option-chinese">(温暖橙色带来舒适)</span></span>
+            </label>
+            <label class="option" data-value="deep purple adds mystery" data-key="color">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Deep purple → mystery <span class="option-chinese">(深紫增添神秘感)</span></span>
+            </label>
+        </div>
+
+        <!-- Emotional Atmosphere -->
+        <div class="section">
+            <div class="section-title">💗 Emotional Atmosphere</div>
+            <p class="section-hint">nano-banana is very sensitive to emotional atmosphere</p>
+            <label class="option" data-value="lonely atmosphere" data-key="emotion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Lonely atmosphere <span class="option-chinese">(孤独氛围)</span></span>
+            </label>
+            <label class="option" data-value="warm and comfortable" data-key="emotion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Warm and comfortable <span class="option-chinese">(温馨舒适)</span></span>
+            </label>
+            <label class="option" data-value="calm of a cold future" data-key="emotion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Calm of a cold future <span class="option-chinese">(冰冷未来的平静)</span></span>
+            </label>
+            <label class="option" data-value="tense atmosphere" data-key="emotion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Tense atmosphere <span class="option-chinese">(紧张氛围)</span></span>
+            </label>
+            <label class="option" data-value="nostalgic sadness" data-key="emotion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Nostalgic sadness <span class="option-chinese">(怀旧悲伤)</span></span>
+            </label>
+        </div>
+
+        <!-- Seed Consistency Phrases -->
+        <div class="section">
+            <div class="section-title">🔄 Seed Consistency Phrases</div>
+            <p class="section-hint">Force consistency across generations</p>
+            <label class="option" data-value="use consistent facial structure" data-key="seed">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Use consistent facial structure <span class="option-chinese">(使用一致面部结构)</span></span>
+            </label>
+            <label class="option" data-value="same character every frame" data-key="seed">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Same character every frame <span class="option-chinese">(每帧相同角色)</span></span>
+            </label>
+            <label class="option" data-value="keep lighting consistent across all shots" data-key="seed">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Keep lighting consistent across all shots <span class="option-chinese">(保持所有镜头光线一致)</span></span>
+            </label>
+        </div>
+
+        <!-- Negative Prompts -->
+        <div class="section">
+            <div class="section-title">🚫 Negative Prompts</div>
+            <p class="section-hint">nano-banana pays close attention to these</p>
+            <label class="option" data-value="no deformation" data-key="negative">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">No deformation <span class="option-chinese">(无变形)</span></span>
+            </label>
+            <label class="option" data-value="no extra limbs" data-key="negative">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">No extra limbs <span class="option-chinese">(无多余肢体)</span></span>
+            </label>
+            <label class="option" data-value="no lens distortion" data-key="negative">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">No lens distortion <span class="option-chinese">(无镜头扭曲)</span></span>
+            </label>
+            <label class="option" data-value="no oversaturated colors" data-key="negative">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">No oversaturated colors <span class="option-chinese">(无过饱和颜色)</span></span>
+            </label>
+            <label class="option" data-value="no cartoon feel" data-key="negative">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">No cartoon feel <span class="option-chinese">(无卡通感)</span></span>
+            </label>
+        </div>
+
         <!-- Style -->
         <div class="section">
-            <div class="section-title">🎨 Style</div>
+            <div class="section-title">🖼️ Base Style</div>
             <label class="option" data-value="cinematic" data-key="style">
                 <input type="checkbox">
                 <span class="option-checkbox"></span>
@@ -375,10 +789,20 @@
     <script>
         const options = document.querySelectorAll('.option');
         const subjectInput = document.getElementById('subject');
+        const invisibleVerbInput = document.getElementById('invisible-verb');
         const customTagsInput = document.getElementById('custom-tags');
         const promptOutput = document.getElementById('prompt-output');
         const copyBtn = document.getElementById('copy-btn');
         const resetBtn = document.getElementById('reset-btn');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+
+        // Fusion inputs
+        const fusionStyle1 = document.getElementById('fusion-style1');
+        const fusionStyle2 = document.getElementById('fusion-style2');
+        const fusionPct1 = document.getElementById('fusion-pct1');
+        const fusionPct2 = document.getElementById('fusion-pct2');
+
+        let currentMode = 'flat';
 
         const selectedOptions = {
             camera: [],
@@ -386,8 +810,27 @@
             lighting: [],
             lens: [],
             motion: [],
+            physics: [],
+            micro: [],
+            anchor: [],
+            texture: [],
+            color: [],
+            emotion: [],
+            seed: [],
+            negative: [],
+            precision: [],
             style: []
         };
+
+        // Mode toggle
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                generatePrompt();
+            });
+        });
 
         options.forEach(option => {
             option.addEventListener('click', (e) => {
@@ -410,23 +853,76 @@
             });
         });
 
+        function buildFusion() {
+            const s1 = fusionStyle1.value.trim();
+            const s2 = fusionStyle2.value.trim();
+            const p1 = fusionPct1.value.trim() || '70';
+            const p2 = fusionPct2.value.trim() || '30';
+            if (s1 && s2) {
+                return `Fusion of ${s2} in the style of ${s1} (${p1}% ${s1}, ${p2}% ${s2})`;
+            } else if (s1) {
+                return `In the style of ${s1}`;
+            } else if (s2) {
+                return `In the style of ${s2}`;
+            }
+            return '';
+        }
+
         function generatePrompt() {
+            if (currentMode === 'layered') {
+                generateLayeredPrompt();
+            } else {
+                generateFlatPrompt();
+            }
+        }
+
+        function generateFlatPrompt() {
             let parts = [];
 
-            // Add subject
             if (subjectInput.value.trim()) {
                 parts.push(subjectInput.value.trim());
             }
 
-            // Add selected options
-            Object.values(selectedOptions).forEach(values => {
-                values.forEach(v => parts.push(v));
-            });
+            const verb = invisibleVerbInput.value.trim();
+            if (verb) {
+                parts.push(verb);
+            }
 
-            // Add custom tags
+            const fusion = buildFusion();
+            if (fusion) {
+                parts.push(fusion);
+            }
+
+            // Collect all selected options by category groups
+            const allSelected = [];
+            Object.entries(selectedOptions).forEach(([key, values]) => {
+                if (key === 'precision') values.forEach(v => allSelected.push(v));
+            });
+            if (selectedOptions.camera.length) allSelected.push(...selectedOptions.camera);
+            if (selectedOptions.aperture.length) allSelected.push(...selectedOptions.aperture);
+            if (selectedOptions.lighting.length) allSelected.push(...selectedOptions.lighting);
+            if (selectedOptions.lens.length) allSelected.push(...selectedOptions.lens);
+            if (selectedOptions.motion.length) allSelected.push(...selectedOptions.motion);
+            if (selectedOptions.physics.length) allSelected.push(...selectedOptions.physics);
+            if (selectedOptions.micro.length) allSelected.push(...selectedOptions.micro);
+            if (selectedOptions.anchor.length) allSelected.push(...selectedOptions.anchor);
+            if (selectedOptions.texture.length) allSelected.push(...selectedOptions.texture);
+            if (selectedOptions.color.length) allSelected.push(...selectedOptions.color);
+            if (selectedOptions.emotion.length) allSelected.push(...selectedOptions.emotion);
+            if (selectedOptions.seed.length) allSelected.push(...selectedOptions.seed);
+            if (selectedOptions.style.length) allSelected.push(...selectedOptions.style);
+
+            allSelected.forEach(v => parts.push(v));
+
             if (customTagsInput.value.trim()) {
                 const tags = customTagsInput.value.split(',').map(t => t.trim()).filter(t => t);
                 parts.push(...tags);
+            }
+
+            // Negative prompts
+            const negatives = selectedOptions.negative;
+            if (negatives.length > 0) {
+                parts.push('Negative: ' + negatives.join(', '));
             }
 
             if (parts.length === 0) {
@@ -436,7 +932,101 @@
             }
         }
 
+        function generateLayeredPrompt() {
+            const lines = [];
+
+            if (subjectInput.value.trim()) {
+                lines.push('Creativity: ' + subjectInput.value.trim());
+            }
+
+            if (selectedOptions.micro.length) {
+                lines.push('Details: ' + selectedOptions.micro.join(', '));
+            }
+
+            if (selectedOptions.precision.length) {
+                lines.push('Precision: ' + selectedOptions.precision.join(', '));
+            }
+
+            const cameraParts = [
+                ...selectedOptions.camera,
+                ...selectedOptions.aperture,
+                ...selectedOptions.lens
+            ];
+            if (cameraParts.length) {
+                lines.push('Camera: ' + cameraParts.join(', '));
+            }
+
+            if (selectedOptions.lighting.length) {
+                lines.push('Lighting: ' + selectedOptions.lighting.join(', '));
+            }
+
+            if (selectedOptions.physics.length) {
+                lines.push('Physics: ' + selectedOptions.physics.join(', '));
+            }
+
+            if (selectedOptions.motion.length) {
+                lines.push('Motion: ' + selectedOptions.motion.join(', '));
+            }
+
+            if (selectedOptions.anchor.length) {
+                lines.push('Style Anchors: ' + selectedOptions.anchor.join(', '));
+            }
+
+            if (selectedOptions.texture.length) {
+                lines.push('Texture: ' + selectedOptions.texture.join(', '));
+            }
+
+            if (selectedOptions.color.length) {
+                lines.push('Color: ' + selectedOptions.color.join(', '));
+            }
+
+            if (selectedOptions.emotion.length) {
+                lines.push('Mood: ' + selectedOptions.emotion.join(', '));
+            }
+
+            if (selectedOptions.style.length) {
+                lines.push('Style: ' + selectedOptions.style.join(', '));
+            }
+
+            if (invisibleVerbInput.value.trim()) {
+                lines.push('Invisible Verb: ' + invisibleVerbInput.value.trim());
+            }
+
+            const fusion = buildFusion();
+            if (fusion) {
+                lines.push('Fusion: ' + fusion);
+            }
+
+            if (customTagsInput.value.trim()) {
+                lines.push('Tags: ' + customTagsInput.value.trim());
+            }
+
+            if (selectedOptions.negative.length) {
+                lines.push('Negative: ' + selectedOptions.negative.join(', '));
+            }
+
+            if (selectedOptions.seed.length) {
+                lines.push('Seed Consistency: ' + selectedOptions.seed.join(', '));
+            }
+
+            if (lines.length === 0) {
+                promptOutput.innerHTML = 'Select options above to generate your prompt...';
+            } else {
+                promptOutput.innerHTML = lines.map(line => {
+                    const colonIdx = line.indexOf(':');
+                    const label = line.substring(0, colonIdx + 1);
+                    const rest = line.substring(colonIdx + 1);
+                    return `<span class="prompt-line"><span class="prompt-line-label">${label}</span>${rest}</span>`;
+                }).join('\n');
+            }
+        }
+
         subjectInput.addEventListener('input', generatePrompt);
+        invisibleVerbInput.addEventListener('input', generatePrompt);
+        fusionStyle1.addEventListener('input', generatePrompt);
+        fusionStyle2.addEventListener('input', generatePrompt);
+        fusionPct1.addEventListener('input', generatePrompt);
+        fusionPct2.addEventListener('input', generatePrompt);
         customTagsInput.addEventListener('input', generatePrompt);
 
         copyBtn.addEventListener('click', () => {
@@ -454,22 +1044,23 @@
         });
 
         resetBtn.addEventListener('click', () => {
-            // Reset all options
             options.forEach(option => {
                 option.classList.remove('selected');
                 option.querySelector('input').checked = false;
             });
 
-            // Clear arrays
             Object.keys(selectedOptions).forEach(key => {
                 selectedOptions[key] = [];
             });
 
-            // Clear inputs
             subjectInput.value = '';
+            invisibleVerbInput.value = '';
+            fusionStyle1.value = '';
+            fusionStyle2.value = '';
+            fusionPct1.value = '70';
+            fusionPct2.value = '30';
             customTagsInput.value = '';
 
-            // Reset prompt
             promptOutput.textContent = 'Select options above to generate your prompt...';
         });
     </script>
