@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nano Banana Prompt Builder</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+        .section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .option.selected {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.15);
+        }
+        .option input {
+            display: none;
+        }
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #666;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .option.selected .option-checkbox {
+            background: #ffd700;
+            border-color: #ffd700;
+        }
+        .option.selected .option-checkbox::after {
+            content: '✓';
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+        .option-label {
+            font-size: 0.95rem;
+        }
+        .option-chinese {
+            color: #888;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        .prompt-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .prompt-label {
+            font-size: 0.85rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .prompt-output {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 80px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: #e0e0e0;
+        }
+        .copy-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #ffd700;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.02);
+        }
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+        .custom-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .custom-input::placeholder {
+            color: #666;
+        }
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: transparent;
+            color: #888;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍌 Nano Banana Prompt Builder</h1>
+        <p class="subtitle">Cinematic photography prompt generator</p>
+
+        <!-- Custom Subject -->
+        <div class="section">
+            <div class="section-title">📝 Subject / Scene</div>
+            <input type="text" id="subject" class="custom-input" placeholder="e.g., A vintage car, Portrait of a woman, A cyberpunk city">
+        </div>
+
+        <!-- Camera Type -->
+        <div class="section">
+            <div class="section-title">📷 Camera Type</div>
+            <label class="option" data-value="35mm film" data-key="camera">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">35mm Film <span class="option-chinese">(用35mm胶片拍摄)</span></span>
+            </label>
+            <label class="option" data-value="macro lens" data-key="camera">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Macro Close-up <span class="option-chinese">(微距特写)</span></span>
+            </label>
+            <label class="option" data-value="medium format" data-key="camera">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Medium Format <span class="option-chinese">(中画幅)</span></span>
+            </label>
+            <label class="option" data-value="vintage lens" data-key="camera">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Vintage Lens <span class="option-chinese">(老镜头)</span></span>
+            </label>
+        </div>
+
+        <!-- Aperture / Depth of Field -->
+        <div class="section">
+            <div class="section-title">🎯 Aperture / Depth of Field</div>
+            <label class="option" data-value="f1.4 shallow depth of field" data-key="aperture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">f1.4 Shallow DOF <span class="option-chinese">(f1.4浅景深)</span></span>
+            </label>
+            <label class="option" data-value="f2.8 bokeh" data-key="aperture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">f2.8 Bokeh <span class="option-chinese">(f2.8背景虚化)</span></span>
+            </label>
+            <label class="option" data-value="tilt-shift" data-key="aperture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Tilt-Shift <span class="option-chinese">(移轴镜头)</span></span>
+            </label>
+            <label class="option" data-value="deep focus" data-key="aperture">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Deep Focus <span class="option-chinese">(深景深)</span></span>
+            </label>
+        </div>
+
+        <!-- Lighting -->
+        <div class="section">
+            <div class="section-title">💡 Lighting</div>
+            <label class="option" data-value="volumetric light" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Volumetric Light <span class="option-chinese">(体积光)</span></span>
+            </label>
+            <label class="option" data-value="golden hour" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Golden Hour <span class="option-chinese">(黄金时刻)</span></span>
+            </label>
+            <label class="option" data-value="studio lighting" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Studio Lighting <span class="option-chinese">(影室灯光)</span></span>
+            </label>
+            <label class="option" data-value="rim light" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Rim Light <span class="option-chinese">(轮廓光)</span></span>
+            </label>
+            <label class="option" data-value="backlit" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Backlit <span class="option-chinese">(逆光)</span></span>
+            </label>
+            <label class="option" data-value="neon lighting" data-key="lighting">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Neon Lighting <span class="option-chinese">(霓虹灯光)</span></span>
+            </label>
+        </div>
+
+        <!-- Lens Type -->
+        <div class="section">
+            <div class="section-title">🔍 Lens Type</div>
+            <label class="option" data-value="anamorphic lens" data-key="lens">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Anamorphic Lens <span class="option-chinese">(变形镜头)</span></span>
+            </label>
+            <label class="option" data-value="85mm portrait lens" data-key="lens">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">85mm Portrait <span class="option-chinese">(85mm人像镜头)</span></span>
+            </label>
+            <label class="option" data-value="24mm wide angle" data-key="lens">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">24mm Wide Angle <span class="option-chinese">(24mm广角)</span></span>
+            </label>
+            <label class="option" data-value="200mm telephoto" data-key="lens">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">200mm Telephoto <span class="option-chinese">(200mm长焦)</span></span>
+            </label>
+        </div>
+
+        <!-- Motion -->
+        <div class="section">
+            <div class="section-title">⚡ Motion Effects</div>
+            <label class="option" data-value="motion blur" data-key="motion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Motion Blur <span class="option-chinese">(运动模糊)</span></span>
+            </label>
+            <label class="option" data-value="panning shot" data-key="motion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Panning Shot <span class="option-chinese">(追焦拍摄)</span></span>
+            </label>
+            <label class="option" data-value="long exposure" data-key="motion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Long Exposure <span class="option-chinese">(长曝光)</span></span>
+            </label>
+            <label class="option" data-value="freezing action" data-key="motion">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Freezing Action <span class="option-chinese">(定格动作)</span></span>
+            </label>
+        </div>
+
+        <!-- Style -->
+        <div class="section">
+            <div class="section-title">🎨 Style</div>
+            <label class="option" data-value="cinematic" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Cinematic <span class="option-chinese">(电影感)</span></span>
+            </label>
+            <label class="option" data-value="film grain" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Film Grain <span class="option-chinese">(胶片颗粒)</span></span>
+            </label>
+            <label class="option" data-value="high contrast" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">High Contrast <span class="option-chinese">(高对比度)</span></span>
+            </label>
+            <label class="option" data-value="muted colors" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Muted Colors <span class="option-chinese">(低饱和度)</span></span>
+            </label>
+            <label class="option" data-value="vibrant colors" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Vibrant Colors <span class="option-chinese">(高饱和度)</span></span>
+            </label>
+            <label class="option" data-value="black and white" data-key="style">
+                <input type="checkbox">
+                <span class="option-checkbox"></span>
+                <span class="option-label">Black & White <span class="option-chinese">(黑白)</span></span>
+            </label>
+        </div>
+
+        <!-- Custom Tags -->
+        <div class="section">
+            <div class="section-title">🏷️ Custom Tags</div>
+            <input type="text" id="custom-tags" class="custom-input" placeholder="e.g., Leica, 8K, photorealistic">
+        </div>
+
+        <!-- Prompt Output -->
+        <div class="prompt-section">
+            <div class="prompt-label">📋 Generated Prompt</div>
+            <div id="prompt-output" class="prompt-output">Select options above to generate your prompt...</div>
+            <button id="copy-btn" class="copy-btn">Copy to Clipboard</button>
+            <button id="reset-btn" class="reset-btn">Reset All</button>
+        </div>
+    </div>
+
+    <script>
+        const options = document.querySelectorAll('.option');
+        const subjectInput = document.getElementById('subject');
+        const customTagsInput = document.getElementById('custom-tags');
+        const promptOutput = document.getElementById('prompt-output');
+        const copyBtn = document.getElementById('copy-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const selectedOptions = {
+            camera: [],
+            aperture: [],
+            lighting: [],
+            lens: [],
+            motion: [],
+            style: []
+        };
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.dataset.value;
+                const key = option.dataset.key;
+                const checkbox = option.querySelector('input');
+
+                if (option.classList.contains('selected')) {
+                    option.classList.remove('selected');
+                    checkbox.checked = false;
+                    selectedOptions[key] = selectedOptions[key].filter(v => v !== value);
+                } else {
+                    option.classList.add('selected');
+                    checkbox.checked = true;
+                    selectedOptions[key].push(value);
+                }
+
+                generatePrompt();
+            });
+        });
+
+        function generatePrompt() {
+            let parts = [];
+
+            // Add subject
+            if (subjectInput.value.trim()) {
+                parts.push(subjectInput.value.trim());
+            }
+
+            // Add selected options
+            Object.values(selectedOptions).forEach(values => {
+                values.forEach(v => parts.push(v));
+            });
+
+            // Add custom tags
+            if (customTagsInput.value.trim()) {
+                const tags = customTagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+                parts.push(...tags);
+            }
+
+            if (parts.length === 0) {
+                promptOutput.textContent = 'Select options above to generate your prompt...';
+            } else {
+                promptOutput.textContent = parts.join(', ');
+            }
+        }
+
+        subjectInput.addEventListener('input', generatePrompt);
+        customTagsInput.addEventListener('input', generatePrompt);
+
+        copyBtn.addEventListener('click', () => {
+            const text = promptOutput.textContent;
+            if (text && !text.startsWith('Select')) {
+                navigator.clipboard.writeText(text).then(() => {
+                    copyBtn.textContent = '✓ Copied!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy to Clipboard';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                });
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            // Reset all options
+            options.forEach(option => {
+                option.classList.remove('selected');
+                option.querySelector('input').checked = false;
+            });
+
+            // Clear arrays
+            Object.keys(selectedOptions).forEach(key => {
+                selectedOptions[key] = [];
+            });
+
+            // Clear inputs
+            subjectInput.value = '';
+            customTagsInput.value = '';
+
+            // Reset prompt
+            promptOutput.textContent = 'Select options above to generate your prompt...';
+        });
+    </script>
+</body>
+</html>
